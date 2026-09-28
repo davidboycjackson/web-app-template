@@ -20,6 +20,8 @@ cd web-app-template
 npm ci
 ```
 
+<em>If you wish to rename the project at this stage, refer to **Rename Your Fork** below.</em>
+
 Set up the Python backend in a second terminal from the repository root:
 
 ```bash
@@ -208,3 +210,16 @@ apps/
   frontend/  React, TypeScript, Vite app and Vitest tests
 docker-compose.yml  Local PostgreSQL service
 ```
+
+## Rename Your Fork
+
+After forking and cloning, choose a display name (for example, `My Project`), an npm/package slug (`my-project`), and a database name (`my_project_db`). Make these changes before starting PostgreSQL or copying the environment examples:
+
+1. In `package.json`, change the root `name` from `web-app-template` to your slug. Then run `npm install --package-lock-only` from the root to update the root `name` and `packages[""]` name in `package-lock.json`. Commit both files.
+2. In `apps/backend/pyproject.toml`, change the project `name` (`web-app-template-backend`) and description to match your project. Use a valid Python package distribution name such as `my-project-backend`.
+3. In `docker-compose.yml`, change `container_name` (`web-app-template-postgres`) and `POSTGRES_DB` (`web_app_db_template`). Set the same database name in `apps/backend/.env.example` (`DATABASE_URL`) and the `DB_NAME` default in `apps/backend/app/database/config.py`.
+4. In `apps/backend/app/main.py`, change the FastAPI title (`Web App Template API`). In `apps/frontend/index.html`, change the browser `<title>` (`Web App Template`).
+5. In `apps/frontend/src/context/AuthContext.tsx`, change the `web_app_template_user` local-storage key so your app does not share saved login state with another copy of the template on the same origin.
+6. Update the heading, description, example clone directory, and database name in this README. Replace the Vite starter text in `apps/frontend/README.md` and update `apps/backend/README.md` if you want the app-specific READMEs to describe your project too.
+
+If you already copied `apps/backend/.env.example` to `apps/backend/.env`, update its `DATABASE_URL` as well; local `.env` files are ignored by Git. An existing Docker volume keeps the old database: changing `POSTGRES_DB` does **not** rename it. To preserve existing data, migrate it separately; to discard local data and start fresh, run `docker compose down -v` before `npm run db:up`. The Git remote still points to the repository you cloned; changing project names does not change its URL.
