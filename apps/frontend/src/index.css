@@ -1,0 +1,38 @@
+@import "tailwindcss";
+
+.default-button {
+    @apply bg-blue-500 text-white rounded-full cursor-pointer;
+}
+
+.danger-button {
+    @apply bg-red-800 text-white rounded-full cursor-pointer;
+}
+
+.page-body {
+    @apply w-full max-w-4xl mx-auto p-4;
+}
+
+.nav-link {
+    @apply text-black;
+}
+
+.nav-link:hover {
+    @apply text-amber-400;
+}
+
+.nav-link-active {
+    @apply text-blue-400;
+}
+
+/* Heading styles */
+h1 {
+    @apply text-3xl font-bold;
+}
+
+h2 {
+    @apply text-2xl font-bold;
+}
+
+h3 {
+    @apply text-xl font-bold;
+}
