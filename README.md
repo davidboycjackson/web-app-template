@@ -12,10 +12,10 @@ The starter currently includes a sample list API and UI, user registration/login
 
 ## Get Started
 
-Clone the repository and install the frontend dependencies from the repository root:
+First fork the repository to your account before cloning:
 
 ```bash
-git clone https://github.com/davidboycjackson/web-app-template.git <project-name>
+git clone <forked-repo>
 cd <project-name>
 npm run rename
 npm ci
