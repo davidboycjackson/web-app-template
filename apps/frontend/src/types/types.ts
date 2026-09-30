@@ -1,7 +1,8 @@
-export type ItemType = {
+export type ProjectType = {
     id: string;
-    item: string;
-    time_added: string;
+    name: string;
+    description: string;
+    date_created: string;
 };
 
 

@@ -13,14 +13,8 @@ const Header = () => {
           <NavLink className={({ isActive }) => (isActive ? 'nav-link-active' : 'nav-link')} to="/">
             Homepage
           </NavLink>
-          <NavLink className={({ isActive }) => (isActive ? 'nav-link-active' : 'nav-link')} to="/page-one">
-            Page 1
-          </NavLink>
-          <NavLink className={({ isActive }) => (isActive ? 'nav-link-active' : 'nav-link')} to="/page-two">
-            Page 2
-          </NavLink>
-          <NavLink className={({ isActive }) => (isActive ? 'nav-link-active' : 'nav-link')} to="/page-three">
-            Page 3
+          <NavLink className={({ isActive }) => (isActive ? 'nav-link-active' : 'nav-link')} to="/create-project">
+            New Project
           </NavLink>
         </div>
 

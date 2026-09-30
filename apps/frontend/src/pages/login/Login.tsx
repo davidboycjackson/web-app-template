@@ -60,7 +60,7 @@ const Login = () => {
       loginUser(result);
       setFormData({ username: '', password: '' });
       setErrorMessage('');
-      navigate('/account');
+      navigate('/');
     } catch (error) {
       console.error(error);
       setErrorMessage('Unable to connect to the API.');

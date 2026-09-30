@@ -3,9 +3,7 @@ import Register from './pages/register/Register';
 import Login from './pages/login/Login';
 import Layout from "./Layout";
 import HomePage from './pages/home/HomePage';
-import PageOne from './pages/page1/PageOne';
-import PageTwo from './pages/page2/PageTwo';
-import PageThree from './pages/page3/PageThree';
+import CreateProjectPage from './pages/create_project/CreateProjectPage';
 import AccountPage from './pages/account/AccountPage';
 import { AuthProvider } from './context/AuthContext';
 
@@ -18,9 +16,7 @@ const App = () => {
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/account" element={<AccountPage />} />
-          <Route path="/page-one" element={<PageOne />} />
-          <Route path="/page-two" element={<PageTwo />} />
-          <Route path="/page-three" element={<PageThree />} />
+          <Route path="/create-project" element={<CreateProjectPage />} />
         </Routes>
       </Layout>
     </AuthProvider>

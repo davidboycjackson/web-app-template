@@ -1,7 +1,11 @@
 @import "tailwindcss";
 
 .default-button {
-    @apply bg-blue-500 text-white rounded-full cursor-pointer;
+    @apply bg-green-700 text-white rounded-full cursor-pointer;
+}
+
+.default-input {
+    @apply bg-white border border-gray-300 rounded-2xl p-2;
 }
 
 .danger-button {
