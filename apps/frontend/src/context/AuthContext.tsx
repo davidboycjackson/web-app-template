@@ -9,7 +9,7 @@ export type AuthUser = {
   date_created: string;
 };
 
-const STORAGE_KEY = 'web_app_template_user';
+const STORAGE_KEY = 'research_tracker_user';
 
 const readStoredUser = (): AuthUser | null => {
   if (typeof window === 'undefined') {

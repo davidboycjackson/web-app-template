@@ -5,10 +5,10 @@ from app.routes import list_routes, user_routes
 
 ORIGINS = ["http://localhost:5173", "http://127.0.0.1:5173"]
 
-app = FastAPI(title="Web App Template API")
+app = FastAPI(title="Research Tracker API")
 
 app = FastAPI(
-    title="Web App Template API",
+    title="Research Tracker API",
     description="An API to track and manage items in a list.",
 )
 

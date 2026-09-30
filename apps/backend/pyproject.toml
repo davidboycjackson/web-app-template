@@ -3,9 +3,9 @@ requires = ["setuptools>=80.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "web-app-template-backend"
+name = "research-tracker-backend"
 version = "0.1.0"
-description = "FastAPI backend for web-app-template"
+description = "FastAPI backend for research-tracker"
 requires-python = ">=3.12"
 dependencies = [
     "alembic>=1.16.0",

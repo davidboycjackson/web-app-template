@@ -1,4 +1,4 @@
-# Web App Template
+# Research Tracker
 
 A full-stack starter project with a React and TypeScript frontend, a FastAPI backend, and PostgreSQL. The frontend and backend are separate apps under `apps/`; Docker Compose runs the local database.
 
@@ -57,7 +57,7 @@ npm run api:dev
 
 Open the frontend at <http://localhost:5173>. The API is at <http://localhost:8000>; its interactive documentation is at <http://localhost:8000/docs> and its health check is <http://localhost:8000/api/health>.
 
-The API defaults to the database configured in `apps/backend/.env.example`: host `localhost`, port `5433`, database `web_app_template_db`. The Compose service maps this to PostgreSQL's container port `5432` to avoid colliding with a local PostgreSQL server.
+The API defaults to the database configured in `apps/backend/.env.example`: host `localhost`, port `5433`, database `research_tracker_db`. The Compose service maps this to PostgreSQL's container port `5432` to avoid colliding with a local PostgreSQL server.
 
 The frontend's `apps/frontend/.env.local` sets the API base URL. The copied example points to the local backend; edit it if your API runs elsewhere:
 
