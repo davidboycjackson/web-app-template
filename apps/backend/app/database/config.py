@@ -1,6 +1,9 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 DB_USER = os.getenv("DB_USER", "postgres_user")
 DB_PASSWORD = os.getenv("DB_PASSWORD", "postgres_password")
