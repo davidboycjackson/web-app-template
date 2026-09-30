@@ -11,7 +11,7 @@ DB_HOST = os.getenv("DB_HOST", "localhost")
 DB_PORT = os.getenv("DB_PORT", "5433")
 DB_NAME = os.getenv("DB_NAME", "web_app_template_db")
 
-print(f"DATABASE_URL=postgresql+psycopg://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}")
+print(f"DATABASE_URL=postgresql+psycopg://{DB_USER}:******@{DB_HOST}:{DB_PORT}/{DB_NAME}")
 
 class Settings(BaseSettings):
     database_url: str = f"postgresql+psycopg://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
