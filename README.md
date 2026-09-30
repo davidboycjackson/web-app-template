@@ -17,10 +17,9 @@ Clone the repository and install the frontend dependencies from the repository r
 ```bash
 git clone https://github.com/davidboycjackson/web-app-template.git <project-name>
 cd <project-name>
+npm run rename
 npm ci
 ```
-
-<em>If you wish to rename the project at this stage, refer to **Rename Your Fork** below.</em>
 
 Set up the Python backend in a second terminal from the repository root:
 
@@ -58,7 +57,7 @@ npm run api:dev
 
 Open the frontend at <http://localhost:5173>. The API is at <http://localhost:8000>; its interactive documentation is at <http://localhost:8000/docs> and its health check is <http://localhost:8000/api/health>.
 
-The API defaults to the database configured in `apps/backend/.env.example`: host `localhost`, port `5433`, database `web_app_db_template`. The Compose service maps this to PostgreSQL's container port `5432` to avoid colliding with a local PostgreSQL server.
+The API defaults to the database configured in `apps/backend/.env.example`: host `localhost`, port `5433`, database `web_app_template_db`. The Compose service maps this to PostgreSQL's container port `5432` to avoid colliding with a local PostgreSQL server.
 
 The frontend's `apps/frontend/.env.local` sets the API base URL. The copied example points to the local backend; edit it if your API runs elsewhere:
 
@@ -72,17 +71,18 @@ Vite reads `VITE_`-prefixed variables at startup, so restart the frontend after 
 
 Run these from the repository root unless otherwise noted:
 
-| Command               | Purpose                                  |
-| --------------------- | ---------------------------------------- |
-| `npm run dev`         | Start the frontend development server    |
-| `npm run api:dev`     | Start the FastAPI development server     |
-| `npm run db:up`       | Start PostgreSQL in Docker               |
-| `npm run db:down`     | Stop the database container              |
-| `npm run api:migrate` | Apply pending Alembic migrations         |
-| `npm run build`       | Build the frontend                       |
-| `npm run test:run`    | Run frontend tests                       |
-| `npm run lint`        | Lint the JavaScript/TypeScript workspace |
-| `npm run typecheck`   | Type-check the frontend                  |
+| Command               | Purpose                                   |
+| --------------------- | ----------------------------------------- |
+| `npm run dev`         | Start the frontend development server     |
+| `npm run api:dev`     | Start the FastAPI development server      |
+| `npm run db:up`       | Start PostgreSQL in Docker                |
+| `npm run db:down`     | Stop the database container               |
+| `npm run db:wipe`     | Stop the database container and wipe data |
+| `npm run api:migrate` | Apply pending Alembic migrations          |
+| `npm run build`       | Build the frontend                        |
+| `npm run test:run`    | Run frontend tests                        |
+| `npm run lint`        | Lint the JavaScript/TypeScript workspace  |
+| `npm run typecheck`   | Type-check the frontend                   |
 
 Run backend tests from `apps/backend` with the virtual environment activated:
 
@@ -94,8 +94,6 @@ Command to open docker container:
 ```bash
 docker compose exec postgres psql -U postgres_user -d <db_name>
 ```
-
-Stopping the database with `npm run db:down` preserves its data in the Docker volume. To remove the volume and all local database data, run `docker compose down -v` from the repository root.
 
 ## Database Tables and Migrations
 
@@ -215,11 +213,3 @@ apps/
   frontend/  React, TypeScript, Vite app and Vitest tests
 docker-compose.yml  Local PostgreSQL service
 ```
-
-## Rename Your Fork
-
-1. Search `web-app-template` and replace all instances with `my-project-name`.
-2. Search `Web App Template` and replace all instances with `My Project Name`.
-3. Search `web_app_template` and replace all instances with `my_project_name`.
-4. In `package.json` ensure root `name` matches root directory name.
-5. In `apps/backend/pyproject.toml` ensure `name` is includes `-backend` at the end.

@@ -22,7 +22,8 @@
     "db:down": "docker compose down",
     "db:wipe": "docker compose down -v",
     "api:dev": "cd apps/backend && fastapi dev app/main.py",
-    "api:migrate": "cd apps/backend && alembic upgrade head"
+    "api:migrate": "cd apps/backend && alembic upgrade head",
+    "rename": "node scripts/rename-project.js"
   },
   "keywords": [],
   "author": "",
