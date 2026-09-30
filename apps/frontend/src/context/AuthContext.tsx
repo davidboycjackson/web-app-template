@@ -1,4 +1,5 @@
-import { createContext, useContext, useMemo, useState, type ReactNode } from 'react';
+import { useMemo, useState, type ReactNode } from 'react';
+import { AuthContext, type AuthContextValue } from './useAuth';
 
 export type AuthUser = {
   id: number;
@@ -8,15 +9,7 @@ export type AuthUser = {
   date_created: string;
 };
 
-type AuthContextValue = {
-  user: AuthUser | null;
-  isAuthenticated: boolean;
-  loginUser: (user: AuthUser) => void;
-  logout: () => void;
-};
-
 const STORAGE_KEY = 'web_app_template_user';
-const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
 const readStoredUser = (): AuthUser | null => {
   if (typeof window === 'undefined') {
@@ -56,14 +49,4 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
-};
-
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-
-  if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-
-  return context;
 };
