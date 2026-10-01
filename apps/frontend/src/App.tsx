@@ -4,6 +4,7 @@ import Login from './pages/login/Login';
 import Layout from "./Layout";
 import HomePage from './pages/home/HomePage';
 import CreateProjectPage from './pages/create_project/CreateProjectPage';
+import ProjectPage from './pages/project/ProjectPage';
 import AccountPage from './pages/account/AccountPage';
 import { AuthProvider } from './context/AuthContext';
 
@@ -17,6 +18,7 @@ const App = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/account" element={<AccountPage />} />
           <Route path="/create-project" element={<CreateProjectPage />} />
+          <Route path="/projects/:projectId" element={<ProjectPage />} />
         </Routes>
       </Layout>
     </AuthProvider>

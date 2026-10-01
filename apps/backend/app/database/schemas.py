@@ -25,19 +25,45 @@ class UserLogin(BaseModel):
     password: str = Field(min_length=1, max_length=255)
 
 
-class ProjectCreate(BaseModel):
+class TaskCreate(BaseModel):
+    project_id: int
     name: str = Field(min_length=1, max_length=255)
     description: str | None = Field(default=None, max_length=255)
 
-class ProjectResponse(BaseModel):
+
+class ProjectTaskCreate(BaseModel):
+    name: str = Field(min_length=1, max_length=255)
+    description: str | None = Field(default=None, max_length=255)
+
+
+class TaskResponse(BaseModel):
     id: int
+    project_id: int
     name: str
     description: str | None
     date_created: datetime
 
     model_config = ConfigDict(from_attributes=True)
 
+
+class ProjectCreate(BaseModel):
+    name: str = Field(min_length=1, max_length=255)
+    description: str | None = Field(default=None, max_length=255)
+    tasks: list[ProjectTaskCreate] = Field(default_factory=list)
+
+
+class ProjectResponse(BaseModel):
+    id: int
+    name: str
+    description: str | None
+    date_created: datetime
+    tasks: list[TaskResponse]
+
+    model_config = ConfigDict(from_attributes=True)
+
+
 class ProjectList(BaseModel):
     list: list[ProjectResponse]
 
     model_config = ConfigDict(from_attributes=True)
+

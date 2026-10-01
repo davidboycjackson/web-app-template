@@ -1,4 +1,5 @@
 import type { ProjectType } from '../../../types/types';
+import { Link } from 'react-router';
 
 interface ProjectItemProps {
     project: ProjectType;
@@ -6,7 +7,7 @@ interface ProjectItemProps {
 
 const ProjectItem = ({ project }: ProjectItemProps) => {
     return (
-        <div className="list-item-container">
+        <Link to={`/projects/${project.id}`} className="list-item-container">
             <div className="flex-2">
                 <h3>{project.name}</h3>
             </div>
@@ -20,7 +21,7 @@ const ProjectItem = ({ project }: ProjectItemProps) => {
                     <div className="flex w-[40%] h-2 bg-green-600" />
                 </div>
             </div>
-        </div>
+        </Link>
     );
 };
 
