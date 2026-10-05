@@ -162,7 +162,7 @@ const Register = () => {
 
                     <button
                         type="submit"
-                        className="default-button px-8 py-2.5"
+                        className="primary-button"
                         disabled={isLoading}
                     >
                         {isLoading ? 'Creating...' : 'Create account'}

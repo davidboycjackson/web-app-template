@@ -1,9 +1,11 @@
 import React, { useEffect } from 'react';
 import { useParams } from 'react-router';
 import type { ProjectType } from '../../types/types';
+import { useAuth } from '../../context/useAuth';
 
 const ProjectPage = () => {
     const { projectId } = useParams();
+    const { user } = useAuth();
     const [projectData, setProjectData] = React.useState<ProjectType | null>(null);
     const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
     const [taskName, setTaskName] = React.useState('');
@@ -37,11 +39,22 @@ const ProjectPage = () => {
         setIsSaving(true);
         setErrorMessage(null);
 
+        if (!user) {
+            setErrorMessage('Please log in before adding a task.');
+            setIsSaving(false);
+            return;
+        }
+
         try {
             const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/tasks`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ project_id: Number(projectId), name: taskName, description: taskDescription }),
+                body: JSON.stringify({
+                    project_id: Number(projectId),
+                    user_created_id: user.id,
+                    name: taskName,
+                    description: taskDescription,
+                }),
             });
 
             if (!response.ok) {
@@ -63,19 +76,32 @@ const ProjectPage = () => {
         <div className="page-body">
             {errorMessage && <p className="text-red-600">{errorMessage}</p>}
             {projectData ? (
-                <div>
-                    <h2>{projectData.name}</h2>
-                    <p>{projectData.description}</p>
-                    <h3>Tasks</h3>
-                    <ul>
+                <div className="flex flex-col gap-4">
+                    <div className="border rounded-2xl p-4 bg-white flex flex-col gap-2">
+                        <h1>{projectData.name}</h1>
+                        <h4>Description:</h4>
+                        <p>{projectData.description}</p>
+                    </div>
+
+                    <hr />
+
+                    <h2>Tasks</h2>
+                    <ul className="flex flex-col gap-2">
                         {projectData.tasks.map((task) => (
-                            <li key={task.id}>
-                                <h4>{task.name}</h4>
+                            <div
+                                key={task.id}
+                                className="border rounded-2xl p-4 bg-white/40 flex flex-col gap-2"
+                            >
+                                <h3>{task.name}</h3>
                                 <p>{task.description}</p>
-                            </li>
+                                <small>{task.date_created}</small>
+                            </div>
                         ))}
                     </ul>
-                    <form onSubmit={handleAddTask} className="flex flex-col gap-4 mt-4">
+
+                    <hr />
+
+                    <form onSubmit={handleAddTask} className="flex flex-col gap-4">
                         <input
                             className="default-input"
                             placeholder="Task name"
@@ -86,6 +112,7 @@ const ProjectPage = () => {
                             onChange={(event) => setTaskName(event.target.value)}
                         />
                         <textarea
+                            rows={2}
                             className="default-input resize-none"
                             placeholder="Description"
                             aria-label="Task description"
@@ -93,7 +120,7 @@ const ProjectPage = () => {
                             value={taskDescription}
                             onChange={(event) => setTaskDescription(event.target.value)}
                         />
-                        <button type="submit" className="default-button" disabled={isSaving}>
+                        <button type="submit" className="primary-button" disabled={isSaving}>
                             {isSaving ? 'Adding...' : 'Add task'}
                         </button>
                     </form>

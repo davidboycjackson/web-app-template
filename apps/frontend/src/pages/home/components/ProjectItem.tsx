@@ -12,8 +12,16 @@ const ProjectItem = ({ project }: ProjectItemProps) => {
                 <h3>{project.name}</h3>
             </div>
 
-            <div className="flex-1">
-                <p>{new Date(project.date_created).toLocaleString()}</p>
+            <div className="flex-1 flex items-center -space-x-2">
+                {project.assigned_users.map(({ user }) => (
+                    <img
+                        key={user.id}
+                        src={user.profile_picture ?? '/defauly_user_icon.png'}
+                        alt={`${user.first_name} ${user.last_name}`}
+                        title={`${user.first_name} ${user.last_name}`}
+                        className="w-8 h-8 rounded-full object-cover border-2 border-white"
+                    />
+                ))}
             </div>
 
             <div className="flex-1 flex justify-end p-4">

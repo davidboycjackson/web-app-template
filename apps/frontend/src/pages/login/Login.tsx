@@ -105,7 +105,7 @@ const Login = () => {
 
           {errorMessage && <p className="text-sm font-medium text-red-600">{errorMessage}</p>}
 
-          <button type="submit" className="default-button px-8 py-2.5" disabled={isLoading}>
+          <button type="submit" className="primary-button" disabled={isLoading}>
             {isLoading ? 'Logging in...' : 'Login'}
           </button>
         </form>

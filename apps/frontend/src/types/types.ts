@@ -2,8 +2,10 @@ export type ProjectType = {
     id: number;
     name: string;
     description: string | null;
-    tasks: TaskType[];
     date_created: string;
+    user_created: UserType | null;
+    tasks: TaskType[];
+    assigned_users: ProjectMemberType[]; 
 };
 
 export type ProjectTaskInput = {
@@ -19,11 +21,19 @@ export type TaskType = {
     date_created: string;
 };
 
+export type ProjectMemberType = {
+    user_id: number;
+    project_id: number;
+    is_lead: boolean;
+    user: UserType;
+};
 
-export type AuthUser = {
+
+export type UserType = {
     id: number;
     username: string;
     first_name: string;
     last_name: string;
+    profile_picture: string | null;
     date_created: string;
 };

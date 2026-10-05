@@ -27,12 +27,22 @@ def client():
 
 
 def test_projects_include_their_tasks(client: TestClient) -> None:
-    project = client.post("/api/projects", json={"name": "Research"})
+    user = client.post(
+        "/api/users/register",
+        json={"username": "researcher", "first_name": "Rae", "last_name": "Search", "password": "secret123"},
+    ).json()
+    project = client.post(
+        "/api/projects",
+        json={"name": "Research", "user_created_id": user["id"]},
+    )
     assert project.status_code == 201
     assert project.json()["tasks"] == []
 
     project_id = project.json()["id"]
-    task = client.post("/api/tasks", json={"project_id": project_id, "name": "Read paper"})
+    task = client.post(
+        "/api/tasks",
+        json={"project_id": project_id, "user_created_id": user["id"], "name": "Read paper"},
+    )
     assert task.status_code == 201
     assert task.json()["project_id"] == project_id
 
@@ -43,9 +53,13 @@ def test_projects_include_their_tasks(client: TestClient) -> None:
 
 
 def test_create_project_with_tasks(client: TestClient) -> None:
+    user = client.post(
+        "/api/users/register",
+        json={"username": "researcher", "first_name": "Rae", "last_name": "Search", "password": "secret123"},
+    ).json()
     response = client.post(
         "/api/projects",
-        json={"name": "Research", "tasks": [{"name": "Read paper", "description": "Review the source"}]},
+        json={"name": "Research", "user_created_id": user["id"], "tasks": [{"name": "Read paper", "description": "Review the source"}]},
     )
 
     assert response.status_code == 201
@@ -58,5 +72,12 @@ def test_create_project_with_tasks(client: TestClient) -> None:
 
 def test_missing_project_returns_404(client: TestClient) -> None:
     assert client.get("/api/projects/999").status_code == 404
-    response = client.post("/api/tasks", json={"project_id": 999, "name": "Read paper"})
+    user = client.post(
+        "/api/users/register",
+        json={"username": "researcher", "first_name": "Rae", "last_name": "Search", "password": "secret123"},
+    ).json()
+    response = client.post(
+        "/api/tasks",
+        json={"project_id": 999, "user_created_id": user["id"], "name": "Read paper"},
+    )
     assert response.status_code == 404

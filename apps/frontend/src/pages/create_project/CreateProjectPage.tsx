@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import type { ProjectTaskInput } from '../../types/types';
 import { useNavigate } from 'react-router';
+import { useAuth } from '../../context/useAuth';
 
 const CreateProjectPage = () => {
     const navigate = useNavigate();
+    const { user } = useAuth();
     const [isLoading, setIsLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
 
@@ -26,6 +28,11 @@ const CreateProjectPage = () => {
             return;
         }
 
+        if (!user) {
+            setErrorMessage('Please log in before creating a project.');
+            return;
+        }
+
         // Add logic to handle project creation here
         console.log('Creating project:', { projectName, projectDescription });
         setIsLoading(true);
@@ -37,6 +44,9 @@ const CreateProjectPage = () => {
                 body: JSON.stringify({
                     name: projectName,
                     description: projectDescription,
+                    user_created_id: user.id,
+                    // Update assigned users with list of select
+                    assigned_users: [{user_id: user.id, project_id: null, is_lead: true}],
                     tasks: projectTasks.map(({ name, description }) => ({ name, description })),
                 }),
             });
@@ -78,6 +88,8 @@ const CreateProjectPage = () => {
                     onChange={(e) => setProjectDescription(e.target.value)}
                 />
 
+                <hr/>
+
                 {projectTasks.map((task, index) => (
                     <div key={index} className="flex flex-col gap-2">
                         <input
@@ -107,6 +119,7 @@ const CreateProjectPage = () => {
 
                 <button
                     type="button"
+                    className="secondary-button"
                     onClick={() =>
                         setProjectTasks([
                             ...projectTasks,
@@ -117,7 +130,7 @@ const CreateProjectPage = () => {
                     Add Task
                 </button>
 
-                <button type="submit" className="default-button">
+                <button type="submit" className="primary-button">
                     Create Project
                 </button>
             </form>
