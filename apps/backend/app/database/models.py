@@ -35,6 +35,9 @@ class User(Base):
     assigned_tasks: Mapped[list["UserTask"]] = relationship(
         "UserTask", back_populates="user"
     )
+    created_updates: Mapped[list["Update"]] = relationship(
+        "Update", back_populates="user_created"
+    )
 
 
 class Project(Base):
@@ -54,6 +57,7 @@ class Project(Base):
         "UserProject", back_populates="project"
     )
     tasks: Mapped[list["Task"]] = relationship("Task", back_populates="project")
+    updates: Mapped[list["Update"]] = relationship("Update", back_populates="project")
 
 
 class UserProject(Base):
@@ -90,6 +94,7 @@ class Task(Base):
     user_created: Mapped[User] = relationship("User", back_populates="created_tasks")
     assigned_users: Mapped[list["UserTask"]] = relationship("UserTask", back_populates="task")
     project: Mapped[Project] = relationship("Project", back_populates="tasks")
+    updates: Mapped[list["Update"]] = relationship("Update", back_populates="task")
 
 
 class UserTask(Base):
@@ -105,3 +110,21 @@ class UserTask(Base):
 
     user: Mapped[User] = relationship("User", back_populates="assigned_tasks")
     task: Mapped[Task] = relationship("Task", back_populates="assigned_users")
+
+
+class Update(Base):
+    __tablename__ = "updates"
+    __test__ = False
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    project_id: Mapped[int] = mapped_column(ForeignKey("projects.id"), nullable=False)
+    task_id: Mapped[int] = mapped_column(ForeignKey("tasks.id"), nullable=False)
+    user_created_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
+    content: Mapped[str] = mapped_column(String(255), nullable=False)
+    date_created: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), nullable=False, server_default=func.now()
+    )
+
+    task: Mapped[Task] = relationship("Task", back_populates="updates")
+    user_created: Mapped[User] = relationship("User", back_populates="created_updates")
+    project: Mapped[Project] = relationship("Project", back_populates="updates")
