@@ -1,12 +1,10 @@
 import Header from './components/Header';
-import Footer from './components/Footer';
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div className="bg-black w-full min-h-screen center flex-col">
+    <div className="bg-black w-full h-screen center flex flex-col">
       <Header />
-      <main className="flex min-h-screen bg-blue-100">{children}</main>
-      <Footer />
+      <main className="flex-1 bg-blue-100">{children}</main>
     </div>
   );
 };

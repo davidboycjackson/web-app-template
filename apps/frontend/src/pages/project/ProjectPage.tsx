@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useParams } from 'react-router';
 import type { ProjectType } from '../../types/types';
 import { useAuth } from '../../context/useAuth';
+import AddTaskModal from './AddTaskModal';
 
 const ProjectPage = () => {
     const { projectId } = useParams();
@@ -11,6 +12,7 @@ const ProjectPage = () => {
     const [taskName, setTaskName] = React.useState('');
     const [taskDescription, setTaskDescription] = React.useState('');
     const [isSaving, setIsSaving] = React.useState(false);
+    const [isAddTaskOpen, setIsAddTaskOpen] = React.useState(false);
 
     useEffect(() => {
         async function fetchProjectData() {
@@ -65,6 +67,7 @@ const ProjectPage = () => {
             setProjectData((current) => current && { ...current, tasks: [...current.tasks, task] });
             setTaskName('');
             setTaskDescription('');
+            setIsAddTaskOpen(false);
         } catch {
             setErrorMessage('Unable to create task.');
         } finally {
@@ -85,45 +88,56 @@ const ProjectPage = () => {
 
                     <hr />
 
-                    <h2>Tasks</h2>
-                    <ul className="flex flex-col gap-2">
-                        {projectData.tasks.map((task) => (
-                            <div
-                                key={task.id}
-                                className="border rounded-2xl p-4 bg-white/40 flex flex-col gap-2"
+                    <div className="flex gap-4">
+                        <div className="flex-1">
+                            <h2>Feed</h2>
+                            <ul className="flex flex-col gap-2">
+                                {projectData.updates.map((update) => (
+                                    <div
+                                        key={update.id}
+                                        className="border rounded-2xl p-4 bg-white/40 flex flex-col gap-2"
+                                    >
+                                        <h3>{update.content}</h3>
+                                        <p>Created by User ID: {update.user_created_id}</p>
+                                        <small>{update.date_created}</small>
+                                    </div>
+                                ))}
+                            </ul>
+                        </div>
+
+                        <div className="flex-1">
+                            <h2>Tasks</h2>
+                            <ul className="flex flex-col gap-2">
+                                {projectData.tasks.map((task) => (
+                                    <li
+                                        key={task.id}
+                                        className="border rounded-2xl p-4 bg-white/40 flex flex-col gap-2"
+                                    >
+                                        <h3>{task.name}</h3>
+                                    </li>
+                                ))}
+                            </ul>
+
+                            <button
+                                type="button"
+                                className="primary-button mt-4"
+                                onClick={() => setIsAddTaskOpen(true)}
                             >
-                                <h3>{task.name}</h3>
-                                <p>{task.description}</p>
-                                <small>{task.date_created}</small>
-                            </div>
-                        ))}
-                    </ul>
+                                Add Task
+                            </button>
+                        </div>
+                    </div>
 
-                    <hr />
-
-                    <form onSubmit={handleAddTask} className="flex flex-col gap-4">
-                        <input
-                            className="default-input"
-                            placeholder="Task name"
-                            aria-label="Task name"
-                            required
-                            maxLength={255}
-                            value={taskName}
-                            onChange={(event) => setTaskName(event.target.value)}
-                        />
-                        <textarea
-                            rows={2}
-                            className="default-input resize-none"
-                            placeholder="Description"
-                            aria-label="Task description"
-                            maxLength={255}
-                            value={taskDescription}
-                            onChange={(event) => setTaskDescription(event.target.value)}
-                        />
-                        <button type="submit" className="primary-button" disabled={isSaving}>
-                            {isSaving ? 'Adding...' : 'Add task'}
-                        </button>
-                    </form>
+                    <AddTaskModal
+                        isOpen={isAddTaskOpen}
+                        isSaving={isSaving}
+                        taskName={taskName}
+                        taskDescription={taskDescription}
+                        onTaskNameChange={setTaskName}
+                        onTaskDescriptionChange={setTaskDescription}
+                        onClose={() => setIsAddTaskOpen(false)}
+                        onSubmit={handleAddTask}
+                    />
                 </div>
             ) : errorMessage ? null : (
                 <p>Loading...</p>
