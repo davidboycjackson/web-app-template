@@ -3,20 +3,20 @@ import React, { useEffect, useRef } from 'react';
 type AddTaskModalProps = {
     isOpen: boolean;
     isSaving: boolean;
-    taskName: string;
+    taskTitle: string;
     taskDescription: string;
-    onTaskNameChange: (value: string) => void;
+    onTaskTitleChange: (value: string) => void;
     onTaskDescriptionChange: (value: string) => void;
     onClose: () => void;
-    onSubmit: (event: React.SubmitEvent<HTMLFormElement>) => void;
+    onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
 };
 
 const AddTaskModal = ({
     isOpen,
     isSaving,
-    taskName,
+    taskTitle,
     taskDescription,
-    onTaskNameChange,
+    onTaskTitleChange,
     onTaskDescriptionChange,
     onClose,
     onSubmit,
@@ -44,13 +44,13 @@ const AddTaskModal = ({
                     onClose();
                 }
             }}
-            className="m-auto w-[min(28rem,calc(100%-2rem))] rounded-xl border border-gray-200 p-6 shadow-xl backdrop:bg-black/50"
+            className="modal-default"
         >
             <div className="mb-4 flex items-center justify-between gap-4">
                 <h2 id="add-task-title">Add Task</h2>
                 <button
                     type="button"
-                    className="secondary-button"
+                    className="button-secondary"
                     onClick={onClose}
                     disabled={isSaving}
                 >
@@ -59,25 +59,25 @@ const AddTaskModal = ({
             </div>
             <form onSubmit={onSubmit} className="flex flex-col gap-4">
                 <input
-                    className="default-input"
+                    className="input-default"
                     placeholder="Task name"
                     aria-label="Task name"
                     autoFocus
                     required
                     maxLength={255}
-                    value={taskName}
-                    onChange={(event) => onTaskNameChange(event.target.value)}
+                    value={taskTitle}
+                    onChange={(event) => onTaskTitleChange(event.target.value)}
                 />
                 <textarea
                     rows={2}
-                    className="default-input resize-none"
+                    className="input-default resize-none"
                     placeholder="Description"
                     aria-label="Task description"
                     maxLength={255}
                     value={taskDescription}
                     onChange={(event) => onTaskDescriptionChange(event.target.value)}
                 />
-                <button type="submit" className="primary-button" disabled={isSaving}>
+                <button type="submit" className="button-primary" disabled={isSaving}>
                     {isSaving ? 'Adding...' : 'Add task'}
                 </button>
             </form>

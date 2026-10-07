@@ -10,19 +10,21 @@ export type ProjectType = {
 };
 
 export type ProjectTaskInput = {
-    name: string;
+    title: string;
     description: string;
 };
 
 export type TaskType = {
     id: number;
     project_id: number;
-    name: string;
+    title: string;
     description: string | null;
     date_created: string;
+    user_created: UserType | null;
 
     in_review: boolean;
     completed: boolean;
+    updates: UpdateType[];
 };
 
 export type UpdateType = {

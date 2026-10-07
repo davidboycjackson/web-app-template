@@ -1,9 +1,10 @@
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router';
 import type { ProjectType } from '../../types/types';
-import { useState, useEffect } from 'react';
-import './HomePage.css';
-import ProjectItem from './components/ProjectItem';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowUpAZ, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import { faArrowUpAZ } from '@fortawesome/free-solid-svg-icons';
+import ProjectItem from './components/ProjectItem';
+import '../../index.css';
 
 const HomePage = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -54,13 +55,10 @@ const HomePage = () => {
                         <input
                             type="text"
                             placeholder="Search Projects"
-                            className="w-full rounded-full rounded-r-none bg-white px-4 py-2"
+                            className="input-default"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                         />
-                        <button className="bg-white rounded-full rounded-l-none cursor-pointer w-16">
-                            <FontAwesomeIcon icon={faMagnifyingGlass} />
-                        </button>
                     </form>
                 </div>
 
@@ -71,7 +69,7 @@ const HomePage = () => {
                 </div>
             </div>
 
-            <div className="list-container">
+            <div className="container-default min-h-0 flex-1 flex flex-col gap-4 overflow-y-auto">
                 {projectList.length === 0 && !isLoading && <p>No projects found.</p>}
                 {projectList
                     .filter((project) =>
@@ -80,6 +78,12 @@ const HomePage = () => {
                     .map((project) => (
                         <ProjectItem key={project.id} project={project} />
                     ))}
+            </div>
+
+            <div>
+                <Link to={`/create-project`} className="button-primary">
+                    New Project
+                </Link>
             </div>
         </div>
     );

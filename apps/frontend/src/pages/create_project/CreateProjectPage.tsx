@@ -47,7 +47,7 @@ const CreateProjectPage = () => {
                     user_created_id: user.id,
                     // Update assigned users with list of select
                     assigned_users: [{user_id: user.id, project_id: null, is_lead: true}],
-                    tasks: projectTasks.map(({ name, description }) => ({ name, description })),
+                    tasks: projectTasks.map(({ title, description }) => ({ title, description })),
                 }),
             });
 
@@ -72,9 +72,9 @@ const CreateProjectPage = () => {
 
             {errorMessage && <p className="text-red-600">{errorMessage}</p>}
 
-            <form onSubmit={handleCreateProject} className="flex flex-col gap-4">
+            <form onSubmit={handleCreateProject} className="container-default-narrow w-full">
                 <input
-                    className="default-input"
+                    className="input-default"
                     type="text"
                     placeholder="Project Name"
                     value={projectName}
@@ -82,7 +82,7 @@ const CreateProjectPage = () => {
                 />
                 <textarea
                     rows={4}
-                    className="default-input resize-none"
+                    className="input-default resize-none"
                     placeholder="Project Description"
                     value={projectDescription}
                     onChange={(e) => setProjectDescription(e.target.value)}
@@ -93,19 +93,19 @@ const CreateProjectPage = () => {
                 {projectTasks.map((task, index) => (
                     <div key={index} className="flex flex-col gap-2">
                         <input
-                            className="default-input"
+                            className="input-default"
                             type="text"
                             placeholder="Task Name"
-                            value={task.name}
+                            value={task.title}
                             onChange={(e) => {
                                 const newTasks = [...projectTasks];
-                                newTasks[index].name = e.target.value;
+                                newTasks[index].title = e.target.value;
                                 setProjectTasks(newTasks);
                             }}
                         />
                         <textarea
                             rows={2}
-                            className="default-input resize-none"
+                            className="input-default resize-none"
                             placeholder="Task Description"
                             value={task.description}
                             onChange={(e) => {
@@ -119,21 +119,23 @@ const CreateProjectPage = () => {
 
                 <button
                     type="button"
-                    className="secondary-button"
+                    className="button-secondary"
                     onClick={() =>
                         setProjectTasks([
                             ...projectTasks,
-                                { name: '', description: '' },
+                                { title: '', description: '' },
                         ])
                     }
                 >
                     Add Task
                 </button>
 
-                <button type="submit" className="primary-button">
+                <button type="submit" className="button-primary">
                     Create Project
                 </button>
             </form>
+
+            
         </div>
     );
 };

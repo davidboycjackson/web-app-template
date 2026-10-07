@@ -1,24 +1,68 @@
-@import "tailwindcss";
-
-.primary-button {
-    @apply bg-green-700 text-white rounded-full cursor-pointer px-4 py-2;
-}
-
-.secondary-button {
-    @apply bg-gray-600 text-white rounded-full cursor-pointer px-4 py-2;
-}
-
-.danger-button {
-    @apply bg-red-800 text-white rounded-full cursor-pointer px-4 py-2;
-}
-
-.default-input {
-    @apply bg-white border border-gray-300 rounded-2xl p-2;
-}
+@import 'tailwindcss';
 
 .page-body {
-    @apply w-full max-w-4xl mx-auto p-4;
+    @apply w-full max-w-4xl mx-auto p-4 flex-1 min-h-0 flex flex-col overflow-clip;
 }
+
+.main {
+    @apply flex min-h-0 flex-1 bg-gray-200;
+}
+
+/* Button Styles */
+
+.button-primary {
+    @apply px-4 py-2 bg-blue-500 text-white cursor-pointer;
+}
+
+.button-secondary {
+    @apply px-4 py-2 bg-white text-black border cursor-pointer;
+}
+
+.button-danger {
+    @apply px-4 py-2 bg-red-800 text-white cursor-pointer;
+}
+
+/* Container Styles */
+
+.container-default {
+    @apply border bg-white p-6 shadow-sm;
+}
+
+.container-default-narrow {
+    @apply mx-auto max-w-xl border bg-white p-4 shadow-sm;
+}
+
+.container-sub {
+    @apply border bg-gray-100 p-4 shadow-sm;
+}
+
+/* Header Styles */
+
+h1 {
+    @apply text-3xl font-bold;
+}
+
+h2 {
+    @apply text-2xl font-bold;
+}
+
+h3 {
+    @apply text-xl font-bold;
+}
+
+/* Input Styles */
+
+.input-default {
+    @apply px-4 py-2 border w-full bg-white;
+}
+
+/* Modal Styles */
+
+.modal-default {
+    @apply m-auto w-[min(28rem,calc(100%-2rem))] border p-6 shadow-xl backdrop:bg-black/50;
+}
+
+/* Navigation Styles */
 
 .nav-link {
     @apply text-black;
@@ -30,17 +74,4 @@
 
 .nav-link-active {
     @apply text-blue-400;
-}
-
-/* Heading styles */
-h1 {
-    @apply text-3xl font-bold mb-4;
-}
-
-h2 {
-    @apply text-2xl font-bold;
-}
-
-h3 {
-    @apply text-xl font-bold;
 }

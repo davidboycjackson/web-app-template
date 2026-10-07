@@ -6,11 +6,11 @@ from app.database.schemas.update_schemas import UpdateResponse
 
 
 class TaskDraft(BaseModel):
-    name: str = Field(min_length=1, max_length=255)
+    title: str = Field(min_length=1, max_length=255)
     description: str | None = Field(default=None, max_length=255)
 
 class TaskCreate(BaseModel):
-    name: str = Field(min_length=1, max_length=255)
+    title: str = Field(min_length=1, max_length=255)
     description: str | None = Field(default=None, max_length=255)
     user_created_id: int
     project_id: int
@@ -18,11 +18,13 @@ class TaskCreate(BaseModel):
 
 class TaskResponse(BaseModel):
     id: int
-    name: str = Field(validation_alias="title")
+    title: str = Field(validation_alias="title")
     description: str | None = Field(default=None, max_length=255)
     project_id: int
     date_created: datetime
     user_created:  UserResponse | None
+    completed: bool
+    in_review: bool
     assigned_users: list[UserTaskResponse] = Field(default_factory=list)
     updates: list[UpdateResponse] = Field(default_factory=list)
 

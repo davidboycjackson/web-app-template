@@ -2,14 +2,15 @@ import React, { useEffect } from 'react';
 import { useParams } from 'react-router';
 import type { ProjectType } from '../../types/types';
 import { useAuth } from '../../context/useAuth';
-import AddTaskModal from './AddTaskModal';
+import AddTaskModal from './components/AddTaskModal';
+import TaskItem from './components/TaskItem';
 
 const ProjectPage = () => {
     const { projectId } = useParams();
     const { user } = useAuth();
     const [projectData, setProjectData] = React.useState<ProjectType | null>(null);
     const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
-    const [taskName, setTaskName] = React.useState('');
+    const [taskTitle, setTaskTitle] = React.useState('');
     const [taskDescription, setTaskDescription] = React.useState('');
     const [isSaving, setIsSaving] = React.useState(false);
     const [isAddTaskOpen, setIsAddTaskOpen] = React.useState(false);
@@ -36,7 +37,7 @@ const ProjectPage = () => {
         fetchProjectData();
     }, [projectId]);
 
-    async function handleAddTask(event: React.SubmitEvent<HTMLFormElement>) {
+    async function handleAddTask(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
         setIsSaving(true);
         setErrorMessage(null);
@@ -54,7 +55,7 @@ const ProjectPage = () => {
                 body: JSON.stringify({
                     project_id: Number(projectId),
                     user_created_id: user.id,
-                    name: taskName,
+                    title: taskTitle,
                     description: taskDescription,
                 }),
             });
@@ -65,7 +66,7 @@ const ProjectPage = () => {
 
             const task = (await response.json()) as ProjectType['tasks'][number];
             setProjectData((current) => current && { ...current, tasks: [...current.tasks, task] });
-            setTaskName('');
+            setTaskTitle('');
             setTaskDescription('');
             setIsAddTaskOpen(false);
         } catch {
@@ -80,7 +81,7 @@ const ProjectPage = () => {
             {errorMessage && <p className="text-red-600">{errorMessage}</p>}
             {projectData ? (
                 <div className="flex flex-col gap-4">
-                    <div className="border rounded-2xl p-4 bg-white flex flex-col gap-2">
+                    <div className="container-default">
                         <h1>{projectData.name}</h1>
                         <h4>Description:</h4>
                         <p>{projectData.description}</p>
@@ -93,10 +94,7 @@ const ProjectPage = () => {
                             <h2>Feed</h2>
                             <ul className="flex flex-col gap-2">
                                 {projectData.updates.map((update) => (
-                                    <div
-                                        key={update.id}
-                                        className="border rounded-2xl p-4 bg-white/40 flex flex-col gap-2"
-                                    >
+                                    <div key={update.id} className="container-default">
                                         <h3>{update.content}</h3>
                                         <p>Created by User ID: {update.user_created_id}</p>
                                         <small>{update.date_created}</small>
@@ -107,20 +105,15 @@ const ProjectPage = () => {
 
                         <div className="flex-1">
                             <h2>Tasks</h2>
-                            <ul className="flex flex-col gap-2">
+                            <div className="flex flex-col gap-2">
                                 {projectData.tasks.map((task) => (
-                                    <li
-                                        key={task.id}
-                                        className="border rounded-2xl p-4 bg-white/40 flex flex-col gap-2"
-                                    >
-                                        <h3>{task.name}</h3>
-                                    </li>
+                                    <TaskItem key={task.id} task={task} />
                                 ))}
-                            </ul>
+                            </div>
 
                             <button
                                 type="button"
-                                className="primary-button mt-4"
+                                className="button-primary"
                                 onClick={() => setIsAddTaskOpen(true)}
                             >
                                 Add Task
@@ -131,9 +124,9 @@ const ProjectPage = () => {
                     <AddTaskModal
                         isOpen={isAddTaskOpen}
                         isSaving={isSaving}
-                        taskName={taskName}
+                        taskTitle={taskTitle}
                         taskDescription={taskDescription}
-                        onTaskNameChange={setTaskName}
+                        onTaskTitleChange={setTaskTitle}
                         onTaskDescriptionChange={setTaskDescription}
                         onClose={() => setIsAddTaskOpen(false)}
                         onSubmit={handleAddTask}

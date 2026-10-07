@@ -55,7 +55,7 @@ def create_project(
 
     for task in payload.tasks:
         new_task = Task(
-            title=task.name,
+            title=task.title,
             description=task.description,
             user_created_id=payload.user_created_id,
             project_id=new_project.id,
