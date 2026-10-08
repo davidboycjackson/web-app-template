@@ -9,7 +9,7 @@ DB_USER = os.getenv("DB_USER", "postgres_user")
 DB_PASSWORD = os.getenv("DB_PASSWORD", "postgres_password")
 DB_HOST = os.getenv("DB_HOST", "localhost")
 DB_PORT = os.getenv("DB_PORT", "5433")
-DB_NAME = os.getenv("DB_NAME", "research_tracker_db")
+DB_NAME = os.getenv("DB_NAME", "web_app_template_db")
 
 print(f"DATABASE_URL=postgresql+psycopg://{DB_USER}:******@{DB_HOST}:{DB_PORT}/{DB_NAME}")
 

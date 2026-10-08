@@ -1,14 +1,14 @@
 from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.routes import user_routes, project_routes, task_routes, update_routes
+from app.routes import list_routes, user_routes
 
 ORIGINS = ["http://localhost:5173", "http://127.0.0.1:5173"]
 
-app = FastAPI(title="Research Tracker API")
+app = FastAPI(title="Web App Template API")
 
 app = FastAPI(
-    title="Research Tracker API",
+    title="Web App Template API",
     description="An API to track and manage items in a list.",
 )
 
@@ -24,7 +24,5 @@ app.add_middleware(
 def health() -> dict[str, str]:
     return {"status": "ok"}
 
+app.include_router(list_routes.router)
 app.include_router(user_routes.router)
-app.include_router(project_routes.router)
-app.include_router(task_routes.router)
-app.include_router(update_routes.router)

@@ -1,34 +1,26 @@
-import { Routes, Route, Navigate } from "react-router";
-import { ProtectedRoute, PublicOnlyRoute } from './components/RouteGuards';
-import { AuthProvider } from './context/AuthContext';
-import Layout from "./Layout";
-
-{/* Page Imports */}
-import HomePage from './pages/home/HomePage';
-import CreateProjectPage from './pages/create_project/CreateProjectPage';
-import ProjectPage from './pages/project/ProjectPage';
-import TaskPage from './pages/task/TaskPage';
+import { Routes, Route } from "react-router";
 import Register from './pages/register/Register';
 import Login from './pages/login/Login';
+import Layout from "./Layout";
+import HomePage from './pages/home/HomePage';
+import PageOne from './pages/page1/PageOne';
+import PageTwo from './pages/page2/PageTwo';
+import PageThree from './pages/page3/PageThree';
 import AccountPage from './pages/account/AccountPage';
+import { AuthProvider } from './context/AuthContext';
 
 const App = () => {
   return (
     <AuthProvider>
       <Layout>
         <Routes>
-          <Route element={<PublicOnlyRoute />}>
-            <Route path="/register" element={<Register />} />
-            <Route path="/login" element={<Login />} />
-          </Route>
-          <Route element={<ProtectedRoute />}>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/account" element={<AccountPage />} />
-            <Route path="/create-project" element={<CreateProjectPage />} />
-            <Route path="/projects/:projectId" element={<ProjectPage />} />
-            <Route path="/tasks/:taskId" element={<TaskPage />} />
-          </Route>
-          <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="/" element={<HomePage />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/account" element={<AccountPage />} />
+          <Route path="/page-one" element={<PageOne />} />
+          <Route path="/page-two" element={<PageTwo />} />
+          <Route path="/page-three" element={<PageThree />} />
         </Routes>
       </Layout>
     </AuthProvider>
