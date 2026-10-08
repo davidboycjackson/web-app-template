@@ -11,7 +11,6 @@ class ProjectCreate(BaseModel):
     user_created_id: int
     assigned_users: list[UserProjectCreate] = Field(default_factory=list)
     tasks: list[TaskDraft] = Field(default_factory=list)
-    updates: list[UpdateResponse] = Field(default_factory=list)
 
 
 class ProjectResponse(BaseModel):
@@ -22,6 +21,5 @@ class ProjectResponse(BaseModel):
     user_created: UserResponse | None
     tasks: list[TaskResponse] = Field(default_factory=list)
     assigned_users: list[UserProjectResponse] = Field(default_factory=list)
-    updates: list[UpdateResponse] = Field(default_factory=list)
 
     model_config = ConfigDict(from_attributes=True)

@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
-import { useParams } from 'react-router';
+import { Link, useParams } from 'react-router';
 import type { TaskType } from '../../types/types';
 import { useAuth } from '../../context/useAuth';
+import UpdateItem from '../../components/UpdateItem/UpdateItem';
 
 const TaskPage = () => {
     const { taskId } = useParams();
@@ -9,6 +10,7 @@ const TaskPage = () => {
     const [taskData, setTaskData] = React.useState<TaskType | null>(null);
     const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
     const [isSaving, setIsSaving] = React.useState(false);
+    const [updateTitle, setUpdateTitle] = React.useState('');
     const [updateContent, setUpdateContent] = React.useState('');
 
     async function handleToggleTaskComplete(event: React.MouseEvent<HTMLButtonElement>) {
@@ -55,10 +57,10 @@ const TaskPage = () => {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
+                    title: updateTitle,
                     content: updateContent,
                     user_created_id: user.id,
                     task_id: taskData.id,
-                    project_id: Number(taskId),
                 }),
             });
 
@@ -70,11 +72,37 @@ const TaskPage = () => {
             setTaskData(
                 (current) => current && { ...current, updates: [...current.updates, update] },
             );
+            setUpdateTitle('');
             setUpdateContent('');
         } catch {
             setErrorMessage('Unable to create task.');
         } finally {
             setIsSaving(false);
+        }
+    }
+
+    async function handleDeleteUpdate(update_id: number) {
+        try {
+            const response = await fetch(
+                `${import.meta.env.VITE_API_BASE_URL}/api/updates/${update_id}`,
+                {
+                    method: 'DELETE',
+                },
+            );
+
+            if (!response.ok) {
+                throw new Error('Failed to delete update');
+            }
+
+            setTaskData(
+                (current) =>
+                    current && {
+                        ...current,
+                        updates: current.updates.filter((u) => u.id !== update_id),
+                    },
+            );
+        } catch (error) {
+            console.error(error);
         }
     }
 
@@ -101,10 +129,10 @@ const TaskPage = () => {
     }, [taskId]);
 
     return (
-        <div className="page-body">
+        <>
             {errorMessage && <p className="text-red-600">{errorMessage}</p>}
             {taskData ? (
-                <>
+                <div className="flex min-h-0 flex-1 flex-col gap-4">
                     {/* Task Details */}
                     <div className="container-default">
                         <div className="flex justify-between items-center">
@@ -121,34 +149,50 @@ const TaskPage = () => {
                             </button>
                         </div>
                         <h4>Description:</h4>
-                        <p>{taskData.description}</p>
+                        <div className="container-sub">
+                            <p>{taskData.description}</p>
+                        </div>
+                    </div>
+
+                    <div>
+                        <Link to={`/projects/${taskData.project_id}`} className="button-secondary">
+                            {'<< Back to Project'}
+                        </Link>
                     </div>
 
                     {/* Task Feed */}
-                    <div className="flex flex-1 flex-col gap-4">
+                    <div className="page-section flex flex-col gap-4">
                         <div className="flex-2">
                             <h2>Feed</h2>
-                            <ul className="flex flex-col gap-2">
+                            <div className="flex flex-col gap-2">
                                 {taskData.updates.map((update) => (
-                                    <div
+                                    <UpdateItem
                                         key={update.id}
-                                        className="container-default"
-                                    >
-                                        <h3>{update.content}</h3>
-                                        <p>Created by User ID: {update.user_created_id}</p>
-                                        <small>{update.date_created}</small>
-                                    </div>
+                                        update={update}
+                                        handleDeleteUpdate={handleDeleteUpdate}
+                                    />
                                 ))}
-                            </ul>
+                            </div>
                         </div>
 
                         {/* Add Update */}
-                        <div className="flex-1">
-                            <form onSubmit={handlePostUpdate} className="flex flex-col gap-2 justify-end">
+                        <div className="flex-1 container-sub">
+                            <form
+                                onSubmit={handlePostUpdate}
+                                className="flex flex-col gap-2 justify-end"
+                            >
+                                <input
+                                    type="text"
+                                    value={updateTitle}
+                                    onChange={(e) => setUpdateTitle(e.target.value)}
+                                    className="input-default"
+                                    placeholder="Title"
+                                />
                                 <textarea
                                     value={updateContent}
                                     onChange={(e) => setUpdateContent(e.target.value)}
-                                    className="input-default"
+                                    rows={4}
+                                    className="input-default flex-1"
                                 />
                                 <button
                                     disabled={isSaving}
@@ -160,11 +204,11 @@ const TaskPage = () => {
                             </form>
                         </div>
                     </div>
-                </>
+                </div>
             ) : errorMessage ? null : (
                 <p>Loading...</p>
             )}
-        </div>
+        </>
     );
 };
 

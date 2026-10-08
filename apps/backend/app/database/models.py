@@ -57,7 +57,6 @@ class Project(Base):
         "UserProject", back_populates="project"
     )
     tasks: Mapped[list["Task"]] = relationship("Task", back_populates="project")
-    updates: Mapped[list["Update"]] = relationship("Update", back_populates="project")
 
 
 class UserProject(Base):
@@ -117,14 +116,13 @@ class Update(Base):
     __test__ = False
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
-    project_id: Mapped[int] = mapped_column(ForeignKey("projects.id"), nullable=False)
     task_id: Mapped[int] = mapped_column(ForeignKey("tasks.id"), nullable=False)
     user_created_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
-    content: Mapped[str] = mapped_column(String(255), nullable=False)
+    title: Mapped[str] = mapped_column(String(255), nullable=False, server_default="NULL")
+    content: Mapped[str] = mapped_column(String(255), nullable=False, server_default="NULL")
     date_created: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False, server_default=func.now()
     )
 
     task: Mapped[Task] = relationship("Task", back_populates="updates")
     user_created: Mapped[User] = relationship("User", back_populates="created_updates")
-    project: Mapped[Project] = relationship("Project", back_populates="updates")

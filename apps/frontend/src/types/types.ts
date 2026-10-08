@@ -5,7 +5,6 @@ export type ProjectType = {
     date_created: string;
     user_created: UserType | null;
     tasks: TaskType[];
-    updates: UpdateType[];
     assigned_users: ProjectMemberType[]; 
 };
 
@@ -21,16 +20,17 @@ export type TaskType = {
     description: string | null;
     date_created: string;
     user_created: UserType | null;
+    updates: UpdateType[];
 
     in_review: boolean;
     completed: boolean;
-    updates: UpdateType[];
 };
 
 export type UpdateType = {
     id: number;
-    project_id: number;
-    user_created_id: number;
+    task_id: number;
+    user_created: UserType;
+    title: string;
     content: string;
     date_created: string;
 };

@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
+import { useAuth } from '../../context/useAuth';
 
 const Register = () => {
     const navigate = useNavigate();
+      const { loginUser } = useAuth();
     const [formData, setFormData] = useState({
         username: '',
         first_name: '',
@@ -11,7 +13,6 @@ const Register = () => {
     });
     const [isLoading, setIsLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
-    const [successMessage, setSuccessMessage] = useState('');
 
     const handleChange = (field: keyof typeof formData, value: string) => {
         setFormData((current) => ({
@@ -20,10 +21,14 @@ const Register = () => {
         }));
     };
 
+    const handleClear = () => {
+        setFormData({ username: '', first_name: '', last_name: '', password: '' });
+        setErrorMessage('');
+    };
+
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setErrorMessage('');
-        setSuccessMessage('');
 
         const trimmedData = {
             username: formData.username.trim(),
@@ -66,10 +71,9 @@ const Register = () => {
                 setErrorMessage(message);
                 return;
             }
+            const result = await response.json();
+            loginUser(result);
 
-            const createdUser = await response.json();
-            setSuccessMessage(`User ${createdUser.username} created successfully.`);
-            setFormData({ username: '', first_name: '', last_name: '', password: '' });
             navigate('/');
         } catch (error) {
             console.error(error);
@@ -81,23 +85,18 @@ const Register = () => {
 
     return (
         <div className="page-body">
-            <div className="mx-auto max-w-xl rounded-[32px] border border-blue-200 bg-white/80 p-6 shadow-sm">
-                <h1 className="mb-6">Register</h1>
+            <div className="container-default-narrow">
+                <h1>Register</h1>
 
                 <form className="space-y-4" onSubmit={handleSubmit}>
                     <div className="space-y-2">
-                        <label
-                            htmlFor="username"
-                            className="block text-sm font-medium text-slate-700"
-                        >
-                            Username
-                        </label>
+                        <label htmlFor="username">Username</label>
                         <input
                             id="username"
                             type="text"
                             value={formData.username}
                             onChange={(event) => handleChange('username', event.target.value)}
-                            className="w-full rounded-full border border-slate-300 bg-white px-4 py-2.5 outline-none transition focus:border-blue-500"
+                            className="input-default"
                             placeholder="jdoe"
                         />
                     </div>
@@ -114,7 +113,7 @@ const Register = () => {
                             type="text"
                             value={formData.first_name}
                             onChange={(event) => handleChange('first_name', event.target.value)}
-                            className="w-full rounded-full border border-slate-300 bg-white px-4 py-2.5 outline-none transition focus:border-blue-500"
+                            className="input-default"
                             placeholder="John"
                         />
                     </div>
@@ -131,7 +130,7 @@ const Register = () => {
                             type="text"
                             value={formData.last_name}
                             onChange={(event) => handleChange('last_name', event.target.value)}
-                            className="w-full rounded-full border border-slate-300 bg-white px-4 py-2.5 outline-none transition focus:border-blue-500"
+                            className="input-default"
                             placeholder="Doe"
                         />
                     </div>
@@ -148,7 +147,7 @@ const Register = () => {
                             type="password"
                             value={formData.password}
                             onChange={(event) => handleChange('password', event.target.value)}
-                            className="w-full rounded-full border border-slate-300 bg-white px-4 py-2.5 outline-none transition focus:border-blue-500"
+                            className="input-default"
                             placeholder="••••••••"
                         />
                     </div>
@@ -156,17 +155,15 @@ const Register = () => {
                     {errorMessage && (
                         <p className="text-sm font-medium text-red-600">{errorMessage}</p>
                     )}
-                    {successMessage && (
-                        <p className="text-sm font-medium text-green-600">{successMessage}</p>
-                    )}
 
-                    <button
-                        type="submit"
-                        className="primary-button"
-                        disabled={isLoading}
-                    >
-                        {isLoading ? 'Creating...' : 'Create account'}
-                    </button>
+                    <div className="flex justify-between">
+                        <button type="button" className="button-secondary" onClick={handleClear} disabled={isLoading}>
+                            Clear
+                        </button>
+                        <button type="submit" className="button-primary" disabled={isLoading}>
+                            {isLoading ? 'Creating...' : 'Create account'}
+                        </button>
+                    </div>
                 </form>
             </div>
         </div>

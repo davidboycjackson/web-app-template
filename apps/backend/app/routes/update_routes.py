@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 
 from app.database.database import get_db
 from app.database.models import Update, User
-from app.database.schemas.update_schemas import UpdateCreate, UpdateResponse
+from app.database.schemas.update_schemas import UpdateCreate, UpdateEdit, UpdateResponse
 
 router = APIRouter()
 
@@ -34,13 +34,53 @@ def create_update(
         )
 
     new_update = Update(
+        title=payload.title,
         content=payload.content,
         user_created_id=payload.user_created_id,
         task_id=payload.task_id,
-        project_id=payload.project_id,
     )
     db.add(new_update)
     db.commit()
     db.refresh(new_update)
 
     return new_update
+
+
+@router.put(
+    "/api/updates/{update_id}",
+    response_model=UpdateResponse,
+    status_code=status.HTTP_200_OK,
+    tags=["updates"],
+)
+def update_update(
+    update_id: int, payload: UpdateEdit, db: Session = Depends(get_db)
+) -> UpdateResponse:
+    update = db.get(Update, update_id)
+    if update is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Update not found"
+        )
+
+    update.title = payload.title
+    update.content = payload.content
+
+    db.commit()
+    db.refresh(update)
+
+    return update
+
+
+@router.delete(
+    "/api/updates/{update_id}",
+    status_code=status.HTTP_201_CREATED,
+    tags=["updates"],
+)
+def delete_update(update_id: int, db: Session = Depends(get_db)) -> None:
+    update = db.get(Update, update_id)
+    if update is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Update not found"
+        )
+    db.delete(update)
+    db.commit()
+    return None

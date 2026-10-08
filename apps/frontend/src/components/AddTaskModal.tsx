@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 
 type AddTaskModalProps = {
     isOpen: boolean;
-    isSaving: boolean;
+    isSaving?: boolean;
     taskTitle: string;
     taskDescription: string;
     onTaskTitleChange: (value: string) => void;

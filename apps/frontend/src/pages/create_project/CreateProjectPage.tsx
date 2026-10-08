@@ -1,7 +1,10 @@
 import { useState } from 'react';
 import type { ProjectTaskInput } from '../../types/types';
-import { useNavigate } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import { useAuth } from '../../context/useAuth';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus, faTrashCan, faEdit } from '@fortawesome/free-solid-svg-icons';
+import AddNewTaskModal from './components/AddNewTaskModal';
 
 const CreateProjectPage = () => {
     const navigate = useNavigate();
@@ -12,6 +15,11 @@ const CreateProjectPage = () => {
     const [projectName, setProjectName] = useState('');
     const [projectDescription, setProjectDescription] = useState('');
     const [projectTasks, setProjectTasks] = useState<ProjectTaskInput[]>([]);
+
+    const [isAddTaskOpen, setIsAddTaskOpen] = useState<boolean>(false);
+    const [currentTaskTitle, setCurrentTaskTitle] = useState<string>('');
+    const [currentTaskDescription, setCurrentTaskDescription] = useState<string>('');
+    const [editingIndex, setEditingIndex] = useState<number | null>(null);
 
     async function handleCreateProject(e: React.FormEvent) {
         e.preventDefault();
@@ -46,7 +54,7 @@ const CreateProjectPage = () => {
                     description: projectDescription,
                     user_created_id: user.id,
                     // Update assigned users with list of select
-                    assigned_users: [{user_id: user.id, project_id: null, is_lead: true}],
+                    assigned_users: [{ user_id: user.id, project_id: null, is_lead: true }],
                     tasks: projectTasks.map(({ title, description }) => ({ title, description })),
                 }),
             });
@@ -64,23 +72,67 @@ const CreateProjectPage = () => {
         }
     }
 
+    function handleAddTask(e: React.FormEvent) {
+        e.preventDefault();
+        if (!currentTaskTitle || !currentTaskDescription) return;
+
+        if (editingIndex !== null) {
+            const newTasks = [...projectTasks];
+            newTasks[editingIndex] = {
+                title: currentTaskTitle,
+                description: currentTaskDescription,
+            };
+            setProjectTasks(newTasks);
+        } else {
+            setProjectTasks([
+                ...projectTasks,
+                { title: currentTaskTitle, description: currentTaskDescription },
+            ]);
+        }
+
+        setCurrentTaskTitle('');
+        setCurrentTaskDescription('');
+        setEditingIndex(null);
+        setIsAddTaskOpen(false);
+    }
+
+    function handleOpenUpdateTask(index: number) {
+        const task = projectTasks[index];
+        setEditingIndex(index);
+        setCurrentTaskTitle(task.title);
+        setCurrentTaskDescription(task.description);
+        setIsAddTaskOpen(true);
+    }
+
+    function handleRemoveTask(index: number) {
+        const newTasks = [...projectTasks];
+        newTasks.splice(index, 1);
+        setProjectTasks(newTasks);
+    }
+
     return (
-        <div className="page-body">
-            <h1>Create Project Page</h1>
+        <>
+            <h1>New Project</h1>
 
             {isLoading && <p>Loading...</p>}
 
             {errorMessage && <p className="text-red-600">{errorMessage}</p>}
 
-            <form onSubmit={handleCreateProject} className="container-default-narrow w-full">
+            <form onSubmit={handleCreateProject} className="form-default">
+                <label htmlFor="project-name">Project Name</label>
                 <input
+                    id="project-name"
                     className="input-default"
                     type="text"
                     placeholder="Project Name"
                     value={projectName}
                     onChange={(e) => setProjectName(e.target.value)}
                 />
+                <label htmlFor="project-description" className="label-default">
+                    Project Description
+                </label>
                 <textarea
+                    id="project-description"
                     rows={4}
                     className="input-default resize-none"
                     placeholder="Project Description"
@@ -88,55 +140,76 @@ const CreateProjectPage = () => {
                     onChange={(e) => setProjectDescription(e.target.value)}
                 />
 
-                <hr/>
+                <hr />
 
-                {projectTasks.map((task, index) => (
-                    <div key={index} className="flex flex-col gap-2">
-                        <input
-                            className="input-default"
-                            type="text"
-                            placeholder="Task Name"
-                            value={task.title}
-                            onChange={(e) => {
-                                const newTasks = [...projectTasks];
-                                newTasks[index].title = e.target.value;
-                                setProjectTasks(newTasks);
-                            }}
-                        />
-                        <textarea
-                            rows={2}
-                            className="input-default resize-none"
-                            placeholder="Task Description"
-                            value={task.description}
-                            onChange={(e) => {
-                                const newTasks = [...projectTasks];
-                                newTasks[index].description = e.target.value;
-                                setProjectTasks(newTasks);
-                            }}
-                        />
-                    </div>
-                ))}
+                <div className="flex justify-between items-center mb-4">
+                    <h2>Tasks</h2>
+                    <button
+                        type="button"
+                        className="cursor-pointer"
+                        onClick={() => {
+                            setEditingIndex(null);
+                            setCurrentTaskTitle('');
+                            setCurrentTaskDescription('');
+                            setIsAddTaskOpen(true);
+                        }}
+                    >
+                        <FontAwesomeIcon icon={faPlus} />
+                    </button>
+                </div>
 
-                <button
-                    type="button"
-                    className="button-secondary"
-                    onClick={() =>
-                        setProjectTasks([
-                            ...projectTasks,
-                                { title: '', description: '' },
-                        ])
-                    }
-                >
-                    Add Task
-                </button>
+                <div className="flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto">
+                    {projectTasks.map((task, index) => (
+                        <div className="container-default flex flex-col gap-4" key={index}>
+                            <h4>{task.title}</h4>
 
-                <button type="submit" className="button-primary">
-                    Create Project
-                </button>
+                            <div className="container-sub">
+                                <p>{task.description}</p>
+                            </div>
+
+                            <div className="flex justify-between">
+                                <button
+                                    type="button"
+                                    onClick={() => handleRemoveTask(index)}
+                                    className="text-red-800 cursor-pointer"
+                                >
+                                    <FontAwesomeIcon icon={faTrashCan} />
+                                </button>
+
+                                <button
+                                    type="button"
+                                    onClick={() => handleOpenUpdateTask(index)}
+                                    className="cursor-pointer"
+                                >
+                                    <FontAwesomeIcon icon={faEdit} />
+                                </button>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+
+                <div className="flex justify-between">
+                    <Link to="/" className="button-secondary">
+                        Cancel
+                    </Link>
+
+                    <button type="submit" className="button-primary">
+                        Create Project
+                    </button>
+                </div>
             </form>
 
-            
-        </div>
+            <AddNewTaskModal
+                isAddTaskOpen={isAddTaskOpen}
+                currentTaskTitle={currentTaskTitle}
+                currentTaskDescription={currentTaskDescription}
+                editingIndex={editingIndex}
+                handleAddTask={handleAddTask}
+                setIsAddTaskOpen={setIsAddTaskOpen}
+                setCurrentTaskTitle={setCurrentTaskTitle}
+                setCurrentTaskDescription={setCurrentTaskDescription}
+            />
+        </>
     );
 };
 

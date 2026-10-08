@@ -42,25 +42,24 @@ const HomePage = () => {
     }, []);
 
     return (
-        <div className="page-body">
-            <h1 data-testid="page-header">Homepage</h1>
+        <>
+            <h1 data-testid="page-header">Projects</h1>
 
             {isLoading && <p>Loading...</p>}
 
             {errorMessage && <p className="text-red-600">{errorMessage}</p>}
 
             <div className="flex">
-                <div className="flex-1">
-                    <form className="w-full flex my-2" onSubmit={handleSearch}>
-                        <input
-                            type="text"
-                            placeholder="Search Projects"
-                            className="input-default"
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                        />
-                    </form>
-                </div>
+
+                <form className="flex-1 w-full flex" onSubmit={handleSearch}>
+                    <input
+                        type="text"
+                        placeholder="Search Projects"
+                        className="input-default"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                    />
+                </form>
 
                 <div className="flex-1 flex justify-end">
                     <button className="cursor-pointer h-full aspect-square">
@@ -80,12 +79,12 @@ const HomePage = () => {
                     ))}
             </div>
 
-            <div>
+            <div className="flex justify-end">
                 <Link to={`/create-project`} className="button-primary">
                     New Project
                 </Link>
             </div>
-        </div>
+        </>
     );
 };
 
